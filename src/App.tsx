@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react"
 import TodoItem from "./TodoItem"
+import { Construction } from "lucide-react"
 
 type Todo = {
   id: number,
@@ -21,6 +22,9 @@ function App() {
   const [todos, setTodos] = useState<Todo[]>(initialTodos)
   /// Valeur du filtre de tâches, par défaut on affiche toutes les tâches
   const [filter, setFilter] = useState<Priority | 'Tous'>('Tous')
+
+  /// Stockage des tâche éffectuée
+  const selectedTodos = todos.filter((todo) => todo.completed)
 
   useEffect(() => {
     /// Sauvegardons les todos dans le localStorage à chaque fois que la liste de todos change
@@ -49,6 +53,16 @@ function App() {
   function deleteTodo(id: number) {
     /// Filtrons la liste des tâches pour ne garder que celles qui n'ont pas l'id de la tâche à supprimer
     setTodos(todos.filter((todo) => todo.id !== id))
+  }
+
+  /// Fonction pour marquer une tâche comme complétée ou non complétée
+  function toggleCompleted(id: number) {
+    setTodos(todos.map((todo) => {
+      if (todo.id === id) {
+        return { ...todo, completed: !todo.completed }
+      }
+      return todo
+    }))
   }
 
   /// Variable pour stocker les tâches filtrées en fonction de la priorité sélectionnée
@@ -132,12 +146,18 @@ function App() {
             >
               {filteredTodos.map((todo) => (
                 <li key={todo.id}>
-                  <TodoItem todo={todo} onDelete={deleteTodo} />
+                  <TodoItem todo={todo} onDelete={deleteTodo} onToggleCompleted={toggleCompleted} />
                 </li>
               ))}
             </ul>
           ) : (
-            <div>Non</div>
+            <div className="flex flex-col p-5 justify-center items-center">
+              <div>
+                <Construction strokeWidth={2} className="w-16 h-16 text-primary" />
+              </div>
+              <p className="text-lg font-semibold mt-4">Aucune tâche trouvée</p>
+              <p className="text-gray-500">Ajoutez une nouvelle tâche pour commencer.</p>
+            </div>
           )}
 
         </div>
