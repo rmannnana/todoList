@@ -45,6 +45,12 @@ function App() {
     console.log(newTodo)
   }
 
+  /// Fonction pour supprimer une tâche de la liste des tâches
+  function deleteTodo(id: number) {
+    /// Filtrons la liste des tâches pour ne garder que celles qui n'ont pas l'id de la tâche à supprimer
+    setTodos(todos.filter((todo) => todo.id !== id))
+  }
+
   /// Variable pour stocker les tâches filtrées en fonction de la priorité sélectionnée
   let filteredTodos: Todo[] = []
 
@@ -126,7 +132,7 @@ function App() {
             >
               {filteredTodos.map((todo) => (
                 <li key={todo.id}>
-                  <TodoItem todo={todo} />
+                  <TodoItem todo={todo} onDelete={deleteTodo} />
                 </li>
               ))}
             </ul>
