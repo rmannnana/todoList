@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react"
+import TodoItem from "./TodoItem"
 
 type Todo = {
   id: number,
@@ -53,9 +54,14 @@ function App() {
     filteredTodos = todos.filter((todo) => todo.priority === filter)
   }
 
+  const totalCount = todos.length
+  const urgentCount = todos.filter((todo) => todo.priority === 'Urgente').length
+  const mediumCount = todos.filter((todo) => todo.priority === 'Moyenne').length
+  const lowCount = todos.filter((todo) => todo.priority === 'Basse').length
+
   return (
-    <div className="flex justify-center margin-10">
-      <div className="w-2/3 flex flex-col gap-4 my-15 bg-base-300 padding-10 rounded-2xl">
+    <div className="flex justify-center ">
+      <div className="w-2/3 flex flex-col gap-4 my-15 bg-base-300 p-4 rounded-lg">
         <div className="flex gap-4">
           <input
             id="5"
@@ -92,7 +98,25 @@ function App() {
               className={`btn btn-soft ${filter === 'Tous' ? 'btn-primary' : ''}`}
               onClick={() => setFilter("Tous")}
             >
-              Tous
+              Tous ({totalCount})
+            </button>
+            <button
+              className={`btn btn-soft ${filter === 'Urgente' ? 'btn-primary' : ''}`}
+              onClick={() => setFilter("Urgente")}
+            >
+              Urgente ({urgentCount})
+            </button>
+            <button
+              className={`btn btn-soft ${filter === 'Moyenne' ? 'btn-primary' : ''}`}
+              onClick={() => setFilter("Moyenne")}
+            >
+              Moyenne ({mediumCount})
+            </button>
+            <button
+              className={`btn btn-soft ${filter === 'Basse' ? 'btn-primary' : ''}`}
+              onClick={() => setFilter("Basse")}
+            >
+              Basse ({lowCount})
             </button>
           </div>
 
@@ -101,7 +125,9 @@ function App() {
               className="divide-y divide-primary/20"
             >
               {filteredTodos.map((todo) => (
-                <li>{todo.text}</li>
+                <li key={todo.id}>
+                  <TodoItem todo={todo} />
+                </li>
               ))}
             </ul>
           ) : (
