@@ -18,14 +18,15 @@ function App() {
   const savedTodos = localStorage.getItem('todos')
   const initialTodos = savedTodos ? JSON.parse(savedTodos) : []
   const [todos, setTodos] = useState<Todo[]>(initialTodos)
+  /// Valeur du filtre de tâches, par défaut on affiche toutes les tâches
+  const [filter, setFilter] = useState<Priority | 'Tous'>('Tous')
 
   useEffect(() => {
     /// Sauvegardons les todos dans le localStorage à chaque fois que la liste de todos change
     localStorage.setItem('todos', JSON.stringify(todos))
   }, [todos])
 
-  /// Fonction pour ajouter une nouvelle tâche
-
+  /// Fonction pour ajouter une nouvelle tâche à la liste des tâches
   function addTodo() {
     /// Vérifions d'abord que l'input n'est pas vide, sinon on ne fait rien
     if (input.trim() === '') return
@@ -42,9 +43,19 @@ function App() {
     setInput('')
     console.log(newTodo)
   }
+
+  /// Variable pour stocker les tâches filtrées en fonction de la priorité sélectionnée
+  let filteredTodos: Todo[] = []
+
+  if (filter === 'Tous') {
+    filteredTodos = todos
+  } else {
+    filteredTodos = todos.filter((todo) => todo.priority === filter)
+  }
+
   return (
-    <div className="flex justify-center">
-      <div className="w-2/3 flex flex-col gap-4 my-15 bg-base-300 padding-5 rounded-2xl">
+    <div className="flex justify-center margin-10">
+      <div className="w-2/3 flex flex-col gap-4 my-15 bg-base-300 padding-10 rounded-2xl">
         <div className="flex gap-4">
           <input
             id="5"
@@ -73,6 +84,30 @@ function App() {
           >
             Ajouter
           </button>
+        </div>
+        <div className="space-y-2 flex-1 h-fit">
+          {/* Affichons les tâches filtrées en fonction de la priorité sélectionnée */}
+          <div className="flex flex-wrap gap-4">
+            <button
+              className={`btn btn-soft ${filter === 'Tous' ? 'btn-primary' : ''}`}
+              onClick={() => setFilter("Tous")}
+            >
+              Tous
+            </button>
+          </div>
+
+          {filteredTodos.length > 0 ? (
+            <ul
+              className="divide-y divide-primary/20"
+            >
+              {filteredTodos.map((todo) => (
+                <li>{todo.text}</li>
+              ))}
+            </ul>
+          ) : (
+            <div>Non</div>
+          )}
+
         </div>
       </div>
     </div>
