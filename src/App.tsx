@@ -23,9 +23,6 @@ function App() {
   /// Valeur du filtre de tâches, par défaut on affiche toutes les tâches
   const [filter, setFilter] = useState<Priority | 'Tous'>('Tous')
 
-  /// Stockage des tâche éffectuée
-  const selectedTodos = todos.filter((todo) => todo.completed)
-
   useEffect(() => {
     /// Sauvegardons les todos dans le localStorage à chaque fois que la liste de todos change
     localStorage.setItem('todos', JSON.stringify(todos))
@@ -141,14 +138,14 @@ function App() {
           </div>
 
           {filteredTodos.length > 0 ? (
-            <ul
-              className="divide-y divide-primary/20"
-            >
-              {filteredTodos.map((todo) => (
-                <li key={todo.id}>
-                  <TodoItem todo={todo} onDelete={deleteTodo} onToggleCompleted={toggleCompleted} />
-                </li>
-              ))}
+            <ul className="divide-y divide-primary/20">
+              {[...filteredTodos]
+                .sort((a, b) => Number(a.completed) - Number(b.completed))
+                .map((todo) => (
+                  <li key={todo.id}>
+                    <TodoItem todo={todo} onDelete={deleteTodo} onToggleCompleted={toggleCompleted} />
+                  </li>
+                ))}
             </ul>
           ) : (
             <div className="flex flex-col p-5 justify-center items-center">
